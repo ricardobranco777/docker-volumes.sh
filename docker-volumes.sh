@@ -30,7 +30,7 @@ get_volumes () {
 	PYTHONIOENCODING=utf-8 python -c 'import sys, json; d = json.load(sys.stdin)[0]; sys.stdout.write("\0".join(set([item.split(":")[1] for item in d["HostConfig"]["Binds"] if d["HostConfig"].get("Binds") is not None] + list(d["Config"]["Volumes"] if d["Config"].get("Volumes") is not None else []))))'
 
 	# The following line could be used to get all mounted volumes, including the ones imported with the --volumes-from docker-run option.
-	#PYTHONIOENCODING=utf-8 python -c 'import sys, json; print(" ".join([item["Destination"] for item in json.load(sys.stdin)[0]["Mounts"]]))'
+	#PYTHONIOENCODING=utf-8 python -c 'import sys, json; print("\0".join([item["Destination"] for item in json.load(sys.stdin)[0]["Mounts"]]))'
 }
 
 save_volumes () {
