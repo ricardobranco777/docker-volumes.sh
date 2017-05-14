@@ -3,12 +3,12 @@
 # The docker-export and docker-commit/docker-save commands do not save the container volumes.
 # Use this script to save and load the container volumes.
 #
-# v1.0.1 by Ricardo Branco
+# v1.1 by Ricardo Branco
 #
 # NOTES:
 #  + This script could have been written in Python or Go, but the tarfile module and the tar
 #    package do not detect sparse files.
-#  + We use the Ubuntu 16.10 Docker image with tar v1.29 that uses SEEK_DATA/SEEK_HOLE to
+#  + We use the Ubuntu 17.04 Docker image with tar v1.29 that uses SEEK_DATA/SEEK_HOLE to
 #    detect sparse files.
 #  + Volumes imported from other volumes via --volumes-from are ignored.
 #
@@ -23,11 +23,11 @@ if [[ $# -ne 3 || ! $2 =~ ^(save|load)$ ]] ; then
 	exit 1
 fi
 
-IMAGE="ubuntu:16.10"
+IMAGE="ubuntu:17.04"
 
 get_volumes () {
 	docker inspect --type container $CONTAINER | \
-	PYTHONIOENCODING=utf-8 python -c 'import sys, json; d = json.load(sys.stdin)[0]; sys.stdout.write("\0".join(set([item.split(":")[1] for item in d["HostConfig"]["Binds"] if d["HostConfig"].get("Binds") is not None] + list(d["Config"]["Volumes"] if d["Config"].get("Volumes") is not None else []))))'
+	PYTHONIOENCODING=utf-8 python -c 'import sys, json; d = json.load(sys.stdin)[0]; binds = d["HostConfig"]["Binds"]; binds = [] if not binds else [x.split(":")[1] for x in binds]; sys.stdout.write("\0".join(set(binds + list(d["Config"]["Volumes"] if d["Config"]["Volumes"] else []))))'
 
 	# The following line could be used to get all mounted volumes, including the ones imported with the --volumes-from docker-run option.
 	#PYTHONIOENCODING=utf-8 python -c 'import sys, json; print("\0".join([item["Destination"] for item in json.load(sys.stdin)[0]["Mounts"]]))'
