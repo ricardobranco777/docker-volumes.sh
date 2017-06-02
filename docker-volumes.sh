@@ -3,7 +3,7 @@
 # The docker-export and docker-commit/docker-save commands do not save the container volumes.
 # Use this script to save and load the container volumes.
 #
-# v1.1 by Ricardo Branco
+# v1.2 by Ricardo Branco
 #
 # NOTES:
 #  + This script could have been written in Python or Go, but the tarfile module and the tar
@@ -26,11 +26,15 @@ fi
 IMAGE="ubuntu:17.04"
 
 get_volumes () {
-	docker inspect --type container $CONTAINER | \
-	PYTHONIOENCODING=utf-8 python -c 'import sys, json; d = json.load(sys.stdin)[0]; binds = d["HostConfig"]["Binds"]; binds = [] if not binds else [x.split(":")[1] for x in binds]; sys.stdout.write("\0".join(set(binds + list(d["Config"]["Volumes"] if d["Config"]["Volumes"] else []))))'
+	cat <(docker inspect --type container -f '{{range $v, $x := .Config.Volumes }}{{printf "%s\n" $v}}{{end}}' $CONTAINER) \
+	    <(docker inspect --type container -f '{{range $i, $v := .HostConfig.Binds }}{{printf "%s\n" $v}}{{end}}' $CONTAINER | \
+		awk -F: '{ print $2 }') | sort -u) | \
+	xargs echo
 
-	# The following line could be used to get all mounted volumes, including the ones imported with the --volumes-from docker-run option.
-	#PYTHONIOENCODING=utf-8 python -c 'import sys, json; print("\0".join([item["Destination"] for item in json.load(sys.stdin)[0]["Mounts"]]))'
+	# The commented code supports pathnames with '\n' characters.
+	#docker inspect --type container $CONTAINER | \
+	#PYTHONIOENCODING=utf-8 python -c 'import sys, json; d = json.load(sys.stdin)[0]; binds = d["HostConfig"]["Binds"]; binds = [] if not binds else [x.split(":")[1] for x in binds]; sys.stdout.write("\0".join(set(binds + list(d["Config"]["Volumes"] if d["Config"]["Volumes"] else []))))'
+
 }
 
 save_volumes () {
