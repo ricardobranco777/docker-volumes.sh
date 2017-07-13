@@ -26,8 +26,8 @@ fi
 IMAGE="ubuntu:17.04"
 
 get_volumes () {
-	cat <(docker inspect --type container -f '{{range $v, $x := .Config.Volumes }}{{printf "%s\n" $v}}{{end}}' $CONTAINER) \
-	    <(docker inspect --type container -f '{{range $i, $v := .HostConfig.Binds }}{{printf "%s\n" $v}}{{end}}' $CONTAINER | \
+	cat <(docker inspect --type container -f '{{range $v, $_ := .Config.Volumes}}{{println $v}}{{end}}' $CONTAINER) \
+	    <(docker inspect --type container -f '{{range .HostConfig.Binds}}{{println .}}{{end}}' $CONTAINER | \
 		awk -F: '{ print $2 }') | sort -u) | \
 	xargs echo
 
