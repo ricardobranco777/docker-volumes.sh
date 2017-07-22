@@ -3,7 +3,7 @@
 # The docker-export and docker-commit/docker-save commands do not save the container volumes.
 # Use this script to save and load the container volumes.
 #
-# v1.2 by Ricardo Branco
+# v1.2.1 by Ricardo Branco
 #
 # NOTES:
 #  + This script could have been written in Python or Go, but the tarfile module and the tar
@@ -29,7 +29,7 @@ get_volumes () {
 	cat <(docker inspect --type container -f '{{range $v, $_ := .Config.Volumes}}{{println $v}}{{end}}' $CONTAINER) \
 	    <(docker inspect --type container -f '{{range .HostConfig.Binds}}{{println .}}{{end}}' $CONTAINER | \
 		awk -F: '{ print $2 }') | sort -u) | \
-	xargs echo
+	xargs -r echo
 
 	# The commented code supports pathnames with '\n' characters.
 	#docker inspect --type container $CONTAINER | \
