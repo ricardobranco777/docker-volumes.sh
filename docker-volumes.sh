@@ -3,7 +3,7 @@
 # The docker-export and docker-commit/docker-save commands do not save the container volumes.
 # Use this script to save and load the container volumes.
 #
-# v1.2.1 by Ricardo Branco
+# v1.3 by Ricardo Branco
 #
 # NOTES:
 #  + This script could have been written in Python or Go, but the tarfile module and the tar
@@ -26,15 +26,9 @@ fi
 IMAGE="ubuntu:17.04"
 
 get_volumes () {
-	cat <(docker inspect --type container -f '{{range $v, $_ := .Config.Volumes}}{{println $v}}{{end}}' $CONTAINER) \
-	    <(docker inspect --type container -f '{{range .HostConfig.Binds}}{{println .}}{{end}}' $CONTAINER | \
-		awk -F: '{ print $2 }') | sort -u) | \
-	xargs -r echo
-
-	# The commented code supports pathnames with '\n' characters.
-	#docker inspect --type container $CONTAINER | \
-	#PYTHONIOENCODING=utf-8 python -c 'import sys, json; d = json.load(sys.stdin)[0]; binds = d["HostConfig"]["Binds"]; binds = [] if not binds else [x.split(":")[1] for x in binds]; sys.stdout.write("\0".join(set(binds + list(d["Config"]["Volumes"] if d["Config"]["Volumes"] else []))))'
-
+	cat <(docker inspect --type container -f '{{range $v, $_ := .Config.Volumes}}{{printf "%v\x00" $v}}{{end}}' $CONTAINER | head -c -1) \
+	    <(docker inspect --type container -f '{{range $_, $v := .HostConfig.Binds}}{{printf "%v\x00" $v}}{{end}}' $CONTAINER | head -c -1) \
+	cut -z -d: -f2 | sort -uz
 }
 
 save_volumes () {
