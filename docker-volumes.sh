@@ -28,7 +28,7 @@ IMAGE="ubuntu:17.04"
 get_volumes () {
 	cat <(docker inspect --type container -f '{{range $v, $_ := .Config.Volumes}}{{printf "%v\x00" $v}}{{end}}' $CONTAINER | head -c -1) \
 	    <(docker inspect --type container -f '{{range $_, $v := .HostConfig.Binds}}{{printf "%v\x00" $v}}{{end}}' $CONTAINER | head -c -1) \
-	cut -z -d: -f2 | sort -uz
+	| cut -z -d: -f2 | sort -uz
 }
 
 save_volumes () {
