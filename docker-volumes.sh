@@ -3,7 +3,7 @@
 # The docker-export and docker-commit/docker-save commands do not save the container volumes.
 # Use this script to save and load the container volumes.
 #
-# v1.3 by Ricardo Branco
+# v1.4 by Ricardo Branco
 #
 # NOTES:
 #  + This script could have been written in Python or Go, but the tarfile module and the tar
@@ -39,7 +39,8 @@ save_volumes () {
 	umask 077
 	# We create a void tar file to avoid mounting the directory as a volume
 	touch "$TAR_FILE"
-	get_volumes | docker run --rm -i --volumes-from $CONTAINER -e LC_ALL=C.UTF-8 -v "$TAR_FILE:/backup/${TAR_FILE##*/}" $IMAGE tar -c -a $v --null -T- -f "/backup/${TAR_FILE##*/}"
+	tmp_dir=$(mktemp -du -p /)
+	get_volumes | docker run --rm -i --volumes-from $CONTAINER -e LC_ALL=C.UTF-8 -v "$TAR_FILE:/${tmp_dir}/${TAR_FILE##*/}" $IMAGE tar -c -a $v --null -T- -f "/${tmp_dir}/${TAR_FILE##*/}"
 }
 
 load_volumes () {
@@ -47,7 +48,8 @@ load_volumes () {
 		echo "ERROR: $TAR_FILE doesn't exist in the current directory" >&2
 		exit 1
 	fi
-	docker run --rm --volumes-from $CONTAINER -e LC_ALL=C.UTF-8 -v "$TAR_FILE:/backup/${TAR_FILE##*/}":ro $IMAGE tar -xp $v -S -f "/backup/${TAR_FILE##*/}" -C / --overwrite
+	tmp_dir=$(mktemp -du -p /)
+	docker run --rm --volumes-from $CONTAINER -e LC_ALL=C.UTF-8 -v "$TAR_FILE:/${tmp_dir}/${TAR_FILE##*/}":ro $IMAGE tar -xp $v -S -f "/${tmp_dir}/${TAR_FILE##*/}" -C / --overwrite
 }
 
 CONTAINER="$1"
