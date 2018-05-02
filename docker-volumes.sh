@@ -8,7 +8,7 @@
 # NOTES:
 #  + This script could have been written in Python or Go, but the tarfile module and the tar
 #    package do not detect sparse files.
-#  + We use the Ubuntu 17.04 Docker image with tar v1.29 that uses SEEK_DATA/SEEK_HOLE to
+#  + We use the Ubuntu 18.04 Docker image with tar v1.29 that uses SEEK_DATA/SEEK_HOLE to
 #    detect sparse files.
 #  + Volumes imported from other volumes via --volumes-from are ignored.
 #
@@ -23,7 +23,7 @@ if [[ $# -ne 3 || ! $2 =~ ^(save|load)$ ]] ; then
 	exit 1
 fi
 
-IMAGE="ubuntu:17.04"
+IMAGE="ubuntu:18.04"
 
 get_volumes () {
 	cat <(docker inspect --type container -f '{{range $v, $_ := .Config.Volumes}}{{printf "%v\x00" $v}}{{end}}' $CONTAINER | head -c -1) \
