@@ -13,13 +13,13 @@
 #  + Volumes imported from other volumes via --volumes-from are ignored.
 #
 
-if [[ $1 == "-v" ]] ; then
+if [[ $1 == "-v" || $1 == "--verbose" ]] ; then
 	v="-v"
 	shift
 fi
 
 if [[ $# -ne 3 || ! $2 =~ ^(save|load)$ ]] ; then
-	echo "Usage: $0 [-v] CONTAINER [save|load] TARBALL" >&2
+	echo "Usage: $0 [-v|--verbose] CONTAINER [save|load] TARBALL" >&2
 	exit 1
 fi
 
@@ -37,7 +37,7 @@ save_volumes () {
 		exit 1
 	fi
 	umask 077
-	# We create a void tar file to avoid mounting the directory as a volume
+	# Create a void tar file to avoid mounting its directory as a volume
 	touch "$TAR_FILE"
 	tmp_dir=$(mktemp -du -p /)
 	get_volumes | docker run --rm -i --volumes-from $CONTAINER -e LC_ALL=C.UTF-8 -v "$TAR_FILE:/${tmp_dir}/${TAR_FILE##*/}" $IMAGE tar -c -a $v --null -T- -f "/${tmp_dir}/${TAR_FILE##*/}"
