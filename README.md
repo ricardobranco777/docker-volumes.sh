@@ -23,7 +23,7 @@ docker-volumes.sh $CONTAINER save $CONTAINER-volumes.tar
 # Copy image and volumes to another host
 scp $CONTAINER.tar $CONTAINER-volumes.tar $USER@$HOST:
 
-###
+### On the other host:
 
 # Create container with the same options used by the previous container
 docker create --name $CONTAINER [<PREVIOUS CONTAINER OPTIONS>] $CONTAINER
