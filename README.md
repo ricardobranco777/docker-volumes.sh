@@ -1,5 +1,38 @@
 # docker-volumes.sh
-The docker-export and docker-commit/docker-save commands do not save the container volumes. Use this script to save and load the container volumes.
+The [docker export](https://docs.docker.com/engine/reference/commandline/export/) and [docker commit](https://docs.docker.com/engine/reference/commandline/commit/) commands do not save the container volumes. Use this script to save and load the container volumes.
+
+# Usage
+
+`docker-volumes.sh [-v|--verbose] CONTAINER [save|load] TARBALL`
+
+# Example
+
+Let's migrate a container to another host with all its volumes.
+
+```
+# Stop the container 
+docker stop $CONTAINER
+# Create a new image
+docker commit $CONTAINER $CONTAINER
+# Save image
+docker save -o $CONTAINER.tar $CONTAINER
+
+# Save the volumes (use ".tar.gz" if you want compression)
+docker-volumes.sh $CONTAINER save $CONTAINER-volumes.tar
+
+# Copy image and volumes to another host
+scp $CONTAINER.tar $CONTAINER-volumes.tar $USER@$HOST:
+
+# On the other host:
+docker load -i $CONTAINER.tar
+docker create --name $CONTAINER [<PREVIOUS CONTAINER OPTIONS>] $CONTAINER
+
+# Load the volumes
+docker-volumes.sh $CONTAINER load $CONTAINER-volumes.tar
+
+# Start container
+docker start $CONTAINER
+```
 
 # Notes
 * This script could have been written in Python or Go, but the tarfile module and the tar package do not detect sparse files.
