@@ -6,11 +6,10 @@
 # v1.4 by Ricardo Branco
 #
 # NOTES:
-#  + This script could have been written in Python or Go, but the tarfile module and the tar
-#    package do not detect sparse files.
-#  + We use the Ubuntu 18.04 Docker image with tar v1.29 that uses SEEK_DATA/SEEK_HOLE to
-#    detect sparse files.
-#  + Volumes imported from other volumes via --volumes-from are ignored.
+#  + This script could have been written in Python or Go, but the tarfile module and the tar package
+#    lack support for writing sparse files.
+#  + We use the Ubuntu 18.04 Docker image with tar v1.29 that uses SEEK_DATA/SEEK_HOLE to manage sparse files.
+#  + Volumes imported from other containers with --volumes-from are ignored.
 #
 
 if [[ $1 == "-v" || $1 == "--verbose" ]] ; then
