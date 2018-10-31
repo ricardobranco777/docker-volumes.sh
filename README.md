@@ -14,7 +14,7 @@ Let's migrate a container to another host with all its volumes.
 docker stop $CONTAINER
 # Create a new image
 docker commit $CONTAINER $CONTAINER
-# Save and image to another host
+# Save and load image to another host
 docker save $CONTAINER | ssh $USER@$HOST docker load 
 
 # Save the volumes (use ".tar.gz" if you want compression)
