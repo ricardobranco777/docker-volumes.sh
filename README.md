@@ -38,4 +38,4 @@ docker start $CONTAINER
 # Notes
 * This script could have been written in Python or Go, but the tarfile module and the tar package lack support for writing sparse files.
 * We use the Ubuntu 18.04 Docker image with tar v1.29 that uses SEEK_DATA/SEEK_HOLE to manage sparse files.
-* Volumes imported from other volumes via `--volumes-from` are ignored.
+* Volumes imported from other containers via `--volumes-from` are ignored.
