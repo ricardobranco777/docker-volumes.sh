@@ -3,13 +3,12 @@
 # The docker-export and docker-commit/docker-save commands do not save the container volumes.
 # Use this script to save and load the container volumes.
 #
-# v1.4 by Ricardo Branco
+# v1.5 by Ricardo Branco
 #
 # NOTES:
 #  + This script could have been written in Python or Go, but the tarfile module and the tar package
 #    lack support for writing sparse files.
 #  + We use the Ubuntu 18.04 Docker image with tar v1.29 that uses SEEK_DATA/SEEK_HOLE to manage sparse files.
-#  + Volumes imported from other containers with --volumes-from are ignored.
 #
 
 if [[ $1 == "-v" || $1 == "--verbose" ]] ; then
@@ -25,9 +24,7 @@ fi
 IMAGE="ubuntu:18.04"
 
 get_volumes () {
-	cat <(docker inspect --type container -f '{{range $v, $_ := .Config.Volumes}}{{printf "%v\x00" $v}}{{end}}' $CONTAINER | head -c -1) \
-	    <(docker inspect --type container -f '{{range $_, $v := .HostConfig.Binds}}{{printf "%v\x00" $v}}{{end}}' $CONTAINER | head -c -1) \
-	| cut -z -d: -f2 | sort -uz
+	cat <(docker inspect --type container -f '{{range .Mounts}}{{printf "%v\x00" .Destination}}{{end}}' | head -c -1) | sort -uz
 }
 
 save_volumes () {
