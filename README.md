@@ -20,12 +20,12 @@ docker save $CONTAINER | ssh $USER@$HOST docker load
 # Save the volumes (use ".tar.gz" if you want compression)
 docker-volumes.sh $CONTAINER save $CONTAINER-volumes.tar
 
-# Copy image and volumes to another host
-scp $CONTAINER.tar $CONTAINER-volumes.tar $USER@$HOST:
+# Copy volumes to another host
+scp $CONTAINER-volumes.tar $USER@$HOST:
 
 ### On the other host:
 
-# Create container with the same options used by the previous container
+# Create container with the same options used in the previous container
 docker create --name $CONTAINER [<PREVIOUS CONTAINER OPTIONS>] $CONTAINER
 
 # Load the volumes
