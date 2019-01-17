@@ -29,7 +29,7 @@ get_volumes () {
 
 save_volumes () {
 	if [ -f "$TAR_FILE" ] ; then
-		echo "ERROR: $TAR_FILE already exists in the current directory" >&2
+		echo "ERROR: $TAR_FILE already exists" >&2
 		exit 1
 	fi
 	umask 077
