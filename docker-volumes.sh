@@ -3,7 +3,7 @@
 # The docker-export and docker-commit/docker-save commands do not save the container volumes.
 # Use this script to save and load the container volumes.
 #
-# v1.5 by Ricardo Branco
+# v1.5.1 by Ricardo Branco
 #
 # NOTES:
 #  + This script could have been written in Python or Go, but the tarfile module and the tar package
@@ -24,7 +24,7 @@ fi
 IMAGE="ubuntu:18.04"
 
 get_volumes () {
-	cat <(docker inspect --type container -f '{{range .Mounts}}{{printf "%v\x00" .Destination}}{{end}}' | head -c -1) | sort -uz
+	cat <(docker inspect --type container -f '{{range .Mounts}}{{printf "%v\x00" .Destination}}{{end}}' $CONTAINER | head -c -1) | sort -uz
 }
 
 save_volumes () {
