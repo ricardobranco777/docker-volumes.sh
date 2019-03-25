@@ -3,7 +3,7 @@
 # The docker-export and docker-commit/docker-save commands do not save the container volumes.
 # Use this script to save and load the container volumes.
 #
-# v1.6 by Ricardo Branco
+# v1.7 by Ricardo Branco
 #
 # NOTES:
 #  + This script could have been written in Python or Go, but the tarfile module and the tar package
@@ -49,7 +49,7 @@ load_volumes () {
 }
 
 CONTAINER="$1"
-TAR_FILE="$3"
+TAR_FILE=$(readlink -f "$3")
 
 set -e
 
