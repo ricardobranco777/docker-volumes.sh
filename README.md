@@ -5,6 +5,10 @@ The [docker export](https://docs.docker.com/engine/reference/commandline/export/
 
 `docker-volumes.sh [-v|--verbose] CONTAINER [save|load] TARBALL`
 
+# Podman
+
+To use [Podman](https://podman.io) instead of Docker, prepend `DOCKER=podman` to the command line to set the `DOCKER` environment variable.
+
 # Example
 
 Let's migrate a container to another host with all its volumes.
