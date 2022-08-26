@@ -8,7 +8,7 @@
 # NOTES:
 #  + This script could have been written in Python or Go, but the tarfile module and the tar package
 #    lack support for writing sparse files.
-#  + We use the Ubuntu 18.04 Docker image with tar v1.29 that uses SEEK_DATA/SEEK_HOLE to manage sparse files.
+#  + We use the Ubuntu 22.04 Docker image with tar v1.29 that uses SEEK_DATA/SEEK_HOLE to manage sparse files.
 #
 
 if [[ $1 == "-v" || $1 == "--verbose" ]] ; then
@@ -21,7 +21,7 @@ if [[ $# -ne 3 || ! $2 =~ ^(save|load)$ ]] ; then
 	exit 1
 fi
 
-IMAGE="ubuntu:18.04"
+IMAGE="ubuntu:22.04"
 
 # Set DOCKER=podman if you want to use podman.io instead of docker
 DOCKER=${DOCKER:-"docker"}
