@@ -1,3 +1,5 @@
+![Build Status](https://github.com/ricardobranco777/docker-volumes.sh/actions/workflows/ci.yml/badge.svg)
+
 # docker-volumes.sh
 The [docker export](https://docs.docker.com/engine/reference/commandline/export/) and [docker commit](https://docs.docker.com/engine/reference/commandline/commit/) commands do not save the container volumes. Use this script to save and load the container volumes.
 
