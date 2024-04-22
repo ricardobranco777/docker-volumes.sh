@@ -43,7 +43,7 @@ docker start $CONTAINER
 
 # Notes
 * This script could have been written in Python or Go, but the tarfile module and the tar package lack support for writing sparse files.
-* We use the Ubuntu 22.04 Docker image with GNU tar v1.29 that uses **SEEK\_DATA**/**SEEK\_HOLE** to [manage sparse files](https://www.gnu.org/software/tar/manual/html_chapter/tar_8.html#SEC137).
+* We use the Ubuntu Docker image with GNU tar v1.29+ that uses **SEEK\_DATA**/**SEEK\_HOLE** to [manage sparse files](https://www.gnu.org/software/tar/manual/html_chapter/tar_8.html#SEC137).
 * To see the volumes that would be processed run `docker container inspect -f '{{json .Mounts}}' $CONTAINER` and pipe it to either [`jq`](https://stedolan.github.io/jq/) or `python -m json.tool`.
 
 # Bugs / Features
