@@ -3,13 +3,13 @@
 # The docker-export and docker-commit/docker-save commands do not save the container volumes.
 # Use this script to save and load the container volumes.
 #
-# v1.8 by Ricardo Branco
-#
 # NOTES:
 #  + This script could have been written in Python or Go, but the tarfile module and the tar package
 #    lack support for writing sparse files.
 #  + We use the Ubuntu docker image with tar v1.29+ that uses SEEK_DATA/SEEK_HOLE to manage sparse files.
 #
+
+VERSION="2.0"
 
 # Set DOCKER=podman if you want to use podman instead of docker
 DOCKER="${DOCKER:-docker}"
@@ -30,6 +30,7 @@ show_usage() {
 			-b, --bind	Use only bind-mounts
 			-V, --volume	Use only internal volumes
 			-v, --verbose	Be verbose
+			--version	Print version and exit
 			-h, --help	Show this help
 	EOF
 }
@@ -48,6 +49,9 @@ while [[ $# -gt 0 ]]; do
 			shift ;;
 		-h|--help)
 			show_usage
+			exit 0 ;;
+		--version)
+			echo "$VERSION"
 			exit 0 ;;
 		-*)
 			echo "Invalid option: $1" >&2
