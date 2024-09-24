@@ -9,7 +9,7 @@ The [docker export](https://docs.docker.com/engine/reference/commandline/export/
 Usage: docker-volumes.sh [-b|--bind] [-V|--volume] [-v|--verbose] CONTAINER save|load TARBALL
 Options:
 -b, --bind	Use only bind-mounts
--v, --volume	Use only internal volumes
+-V, --volume	Use only internal volumes
 -v, --verbose	Be verbose
 -h, --help	Show this help
 ```
