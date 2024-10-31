@@ -19,7 +19,7 @@ IMAGE="${IMAGE:-ubuntu:24.04}"
 # We use .Destination since we're using --volumes-from
 FILTER_BOTH='{{ range .Mounts }}{{ printf "%v\x00" .Destination }}{{ end }}'
 FILTER_BIND='{{ range .Mounts }}{{ if eq .Type "bind" }}{{ printf "%v\x00" .Destination }}{{ end }}{{ end }}'
-FILTER_VOLUME='{{ range .Mounts }}{{ if eq .Type "volume" }}{{ printf "%v\x00" .Destination }}{{ end }}{ end }}'
+FILTER_VOLUME='{{ range .Mounts }}{{ if eq .Type "volume" }}{{ printf "%v\x00" .Destination }}{{ end }}{{ end }}'
 
 FILTER="$FILTER_BOTH"
 
