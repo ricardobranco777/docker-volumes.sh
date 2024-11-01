@@ -9,7 +9,7 @@
 #  + We use the Ubuntu docker image with tar v1.29+ that uses SEEK_DATA/SEEK_HOLE to manage sparse files.
 #
 
-VERSION="2.0.1"
+VERSION="2.0.2"
 
 # Set DOCKER=podman if you want to use podman instead of docker
 DOCKER="${DOCKER:-docker}"
@@ -19,7 +19,7 @@ IMAGE="${IMAGE:-ubuntu:24.04}"
 # We use .Destination since we're using --volumes-from
 FILTER_BOTH='{{ range .Mounts }}{{ printf "%v\x00" .Destination }}{{ end }}'
 FILTER_BIND='{{ range .Mounts }}{{ if eq .Type "bind" }}{{ printf "%v\x00" .Destination }}{{ end }}{{ end }}'
-FILTER_VOLUME='{{ range .Mounts }}{{ if eq .Type "volume" }}{{ printf "%v\x00" .Destination }}{{ end }}{ end }}'
+FILTER_VOLUME='{{ range .Mounts }}{{ if eq .Type "volume" }}{{ printf "%v\x00" .Destination }}{{ end }}{{ end }}'
 
 FILTER="$FILTER_BOTH"
 
