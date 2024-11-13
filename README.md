@@ -48,6 +48,10 @@ docker-volumes.sh $CONTAINER load $CONTAINER-volumes.tar
 docker start $CONTAINER
 ```
 
+To get the command used to create a container:
+- podman: `podman container inspect -f '{{ range .Config.CreateCommand }}{{ printf "%s " . }}{{ end }}' $CONTAINER`
+- docker lacks this functionality.
+
 ## Notes
 - This script could have been written in Python or Go, but the tarfile module and the tar package lack support for writing sparse files.
 - We use the Ubuntu Docker image with GNU tar v1.29+ that uses `SEEK_DATA` & `SEEK_HOLE` to [manage sparse files](https://www.gnu.org/software/tar/manual/html_chapter/tar_8.html#SEC137).
