@@ -18,6 +18,8 @@ Options:
 
 To use [Podman](https://podman.io) instead of Docker, prepend `DOCKER=podman` to the command line to set the `DOCKER` environment variable.
 
+NOTE: With rootful podman you may want to check the [checkpoint/restore functionality](https://podman.io/docs/checkpoint#migrating-the-container)
+
 # Example
 
 Let's migrate a container to another host with all its volumes.
